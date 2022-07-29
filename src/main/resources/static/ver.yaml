@@ -1,0 +1,506 @@
+definitions:
+  helper.JSONBadRequest:
+    properties:
+      code:
+        example: 400
+        type: integer
+      data:
+        type: object
+      message:
+        example: Wrong Parameter
+        type: string
+    type: object
+  helper.JSONIntServerErrReq:
+    properties:
+      code:
+        example: 500
+        type: integer
+      data:
+        type: object
+      message:
+        example: Error Database
+        type: string
+    type: object
+  helper.JSONSuccessResult:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        type: object
+      message:
+        example: Success
+        type: string
+    type: object
+  models.Categories:
+    properties:
+      categoryId:
+        type: integer
+      categoryName:
+        type: string
+      children:
+        items:
+          $ref: '#/definitions/models.Categories'
+        type: array
+      createdDate:
+        type: string
+      isActive:
+        type: boolean
+      modifiedDate:
+        type: string
+      parentId:
+        type: integer
+      rank:
+        type: integer
+    type: object
+  models.Category:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.Categories'
+        type: array
+      page:
+        type: string
+      pageSize:
+        type: integer
+      total:
+        type: integer
+      totalPage:
+        type: integer
+    type: object
+  models.Data:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+      page:
+        type: string
+      pageSize:
+        type: integer
+      total:
+        type: integer
+      totalPage:
+        type: integer
+    type: object
+  models.PriceBooks:
+    properties:
+      endDate:
+        type: string
+      id:
+        type: integer
+      isActive:
+        type: boolean
+      price:
+        type: number
+      priceBookId:
+        type: integer
+      priceBookName:
+        type: string
+      productId:
+        type: integer
+      startDate:
+        type: string
+    type: object
+  models.Product:
+    properties:
+      allowSale:
+        type: boolean
+      barCode:
+        type: string
+      basePrice:
+        type: number
+      categoryId:
+        type: integer
+      categoryName:
+        type: string
+      code:
+        type: string
+      createdDate:
+        type: string
+      fullName:
+        type: string
+      id:
+        type: integer
+      isActive:
+        type: boolean
+      modifiedDate:
+        type: string
+      name:
+        type: string
+      priceBooks:
+        items:
+          $ref: '#/definitions/models.PriceBooks'
+        type: array
+      salePrice:
+        type: number
+      tradeMarkName:
+        description: Images        pq.StringArray `json:"images,omitempty" gorm:"type:text[]"`
+        type: string
+      type:
+        type: integer
+      unit:
+        type: string
+    type: object
+info:
+  contact: {
+    email: kamusuyurikun@gmail.com
+  }
+  title: Ngaliem
+  description: Project
+  version: v1.0
+paths:
+  /DB/categories/{id}:
+    get:
+      consumes:
+        - application/json
+      description: All Catelories
+      parameters:
+        - description: Category ID
+          in: path
+          name: id
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONSuccessResult'
+              - properties:
+                  data:
+                    $ref: '#/definitions/models.Categories'
+                type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONBadRequest'
+              - properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONIntServerErrReq'
+              - properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+      summary: Show All Catelories
+      tags:
+        - Catelories(DB)
+  /DB/products:
+    get:
+      consumes:
+        - application/json
+      description: All Products
+      parameters:
+        - default: 1
+          description: Page
+          in: query
+          name: page
+          type: integer
+        - default: 25
+          description: Size of Product
+          in: query
+          name: size
+          type: integer
+        - description: Name is.....
+          in: query
+          name: name
+          type: string
+        - description: 'Select a Type ??? '
+          enum:
+            - createdDate
+            - basePrice
+          in: query
+          name: type
+          type: string
+        - description: 'Sort By ... ??? '
+          enum:
+            - ASC
+            - DESC
+          in: query
+          name: sortBy
+          type: string
+        - default: 0
+          description: From Price
+          in: query
+          name: from
+          type: integer
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONSuccessResult'
+              - properties:
+                  data:
+                    $ref: '#/definitions/models.Product'
+                type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONBadRequest'
+              - properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONIntServerErrReq'
+              - properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+      summary: Show All Products
+      tags:
+        - Products(DB)
+  /api/categories:
+    get:
+      consumes:
+        - application/json
+      description: All Catelories
+      parameters:
+        - description: Page
+          in: query
+          name: page
+          type: integer
+        - description: Size of Category
+          in: query
+          name: size
+          type: integer
+        - description: 'Select a Type ??? '
+          enum:
+            - createdDate
+          in: query
+          name: type
+          type: string
+        - description: 'Sort By ... ??? '
+          enum:
+            - ASC
+            - DESC
+          in: query
+          name: sortBy
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONSuccessResult'
+              - properties:
+                  data:
+                    $ref: '#/definitions/models.Category'
+                type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONBadRequest'
+              - properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONIntServerErrReq'
+              - properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+      summary: Show All Catelories
+      tags:
+        - Catelories
+  /api/categories/{id}:
+    get:
+      consumes:
+        - application/json
+      description: Category ID
+      parameters:
+        - description: Category ID
+          in: path
+          name: id
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONSuccessResult'
+              - properties:
+                  data:
+                    $ref: '#/definitions/models.Categories'
+                type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONBadRequest'
+              - properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONIntServerErrReq'
+              - properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+      summary: Show CatagoryID
+      tags:
+        - Catelories
+  /api/products:
+    get:
+      consumes:
+        - application/json
+      description: All Products
+      parameters:
+        - description: Page
+          in: query
+          name: page
+          type: integer
+        - description: Size of Product
+          in: query
+          name: size
+          type: integer
+        - description: Name is.....
+          in: query
+          name: name
+          type: string
+        - description: 'Select a Type ??? '
+          enum:
+            - createdDate
+            - basePrice
+          in: query
+          name: type
+          type: string
+        - description: 'Sort By ... ??? '
+          enum:
+            - ASC
+            - DESC
+          in: query
+          name: sortBy
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONSuccessResult'
+              - properties:
+                  data:
+                    $ref: '#/definitions/models.Data'
+                type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONBadRequest'
+              - properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONIntServerErrReq'
+              - properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+      summary: Show All Products
+      tags:
+        - Products
+  /api/products/{id}:
+    get:
+      consumes:
+        - application/json
+      description: Product ID
+      parameters:
+        - description: Product ID
+          in: path
+          name: id
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONSuccessResult'
+              - properties:
+                  data:
+                    $ref: '#/definitions/models.Product'
+                type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONBadRequest'
+              - properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+              - $ref: '#/definitions/helper.JSONIntServerErrReq'
+              - properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+      summary: Show ProductID
+      tags:
+        - Products
+swagger: "2.0"

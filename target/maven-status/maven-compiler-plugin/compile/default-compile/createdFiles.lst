@@ -1,0 +1,13 @@
+UnlimitedProject\ver\repository\CategoryRepo.class
+UnlimitedProject\ver\controller\CategoryController.class
+UnlimitedProject\ver\Model\Categories.class
+UnlimitedProject\ver\swagger\SwaggerConfig.class
+UnlimitedProject\ver\Model\AbstractAuditing.class
+UnlimitedProject\ver\modelmapper\CategoryMapper.class
+UnlimitedProject\ver\DTO\ErrorDto.class
+UnlimitedProject\ver\service\impl\CategoryService.class
+UnlimitedProject\ver\VerApplication.class
+UnlimitedProject\ver\DTO\SubErrorDto.class
+UnlimitedProject\ver\DTO\CategoryDTO.class
+UnlimitedProject\ver\modelmapper\CategoryMapperImpl.class
+UnlimitedProject\ver\service\CategoryInterface.class
